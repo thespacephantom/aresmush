@@ -9,18 +9,33 @@ module AresMUSH
         
         notices = enactor.login_notices
         
-        response = notices.to_a.sort_by { |n| [ n.is_unread ? 1 : 0, n.created_at ] }.reverse.map { |n| {
+        notice_data = notices.to_a.sort_by { |n| [ n.is_unread ? 1 : 0, n.timestamp ] }.reverse.map { |n| {
           message: Website.format_markdown_for_html(n.message),
           data: n.data ? n.data.split("|") : [],
           reference_id: n.reference_id,
           type: n.type,
           is_unread: n.is_unread,
-          timestamp: OOCTime.local_long_timestr(enactor, n.created_at)
+          timestamp: OOCTime.local_long_timestr(enactor, n.timestamp)
         }}
+        
+        alts = AresCentral.alts(enactor)
+        alts_data = []
+        alts.each do |a|
+          next if a == enactor
+          count = a.unread_notifications.count
+          next if count == 0
+          alts_data << {
+            name: a.name,
+            count: count
+          }
+        end
         
         #notices.find(is_unread: true).each { |n| n.update(is_unread: false)}
         
-        response
+        {
+          notices: notice_data,
+          alts: alts_data
+        }
       end
     end
   end

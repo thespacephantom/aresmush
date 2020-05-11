@@ -110,15 +110,23 @@ module AresMUSH
       Global.dispatcher.spawn("Page notification", nil) do
         everyone.each do |char|    
           title = thread.title_without_viewer(char)
-          notification = "#{thread.id}|#{title}|#{Website.format_markdown_for_html(message)}"
+          data = {
+            id: thread.id,
+            key: thread.id,
+            title: title,
+            author: {name: enactor.name, icon: Website.icon_for_char(enactor), id: enactor.id},
+            message: Website.format_markdown_for_html(message),
+            is_page: true
+          }
+                  
           clients = Global.client_monitor.clients.select { |client| client.web_char_id == char.id }
           clients.each do |client|
-            client.web_notify :new_page, notification
+            client.web_notify :new_page, "#{data.to_json}"
           end
         end
       end
         
-      thread.key
+      thread
     end
     
     def self.find_thread(chars)
@@ -145,6 +153,7 @@ module AresMUSH
       threads = char.read_page_threads || []
       threads << thread.id.to_s
       char.update(read_page_threads: threads)
+      Login.mark_notices_read(char, :pm, thread.id)
     end
     
     def self.mark_thread_unread(thread, except_for_char = nil)

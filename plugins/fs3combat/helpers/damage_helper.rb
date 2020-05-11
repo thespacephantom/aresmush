@@ -9,10 +9,6 @@ module AresMUSH
     def self.can_manage_damage?(actor)
       actor && actor.has_permission?("manage_combat")
     end
-
-    def self.can_setup_hospitals?(actor)
-      actor.has_permission?("build")
-    end
     
     def self.display_severity(value)
       case value
@@ -62,10 +58,7 @@ module AresMUSH
       end
       
       Damage.create(params)
-     end
-     
-     def self.is_in_hospital?(char)
-       Room.find(is_hospital: true).include?(char.room)
+      FS3Combat.award_damage_achievement(target, is_mock)
      end
      
      def self.healing_points(wound_level)
@@ -108,16 +101,15 @@ module AresMUSH
        ability = Global.read_config("fs3combat", "recovery_skill")
        roll_params = FS3Skills::RollParams.new(ability)
        recovery_roll = FS3Skills.one_shot_roll(char, roll_params)
-       in_hospital = FS3Combat.is_in_hospital?(char)
        doctors = char.doctors.map { |d| d.name }
        
        points = 1
        
-       if (in_hospital || doctors.count > 0 || recovery_roll[:successes] > 0)
+       if (doctors.count > 0 || recovery_roll[:successes] > 0)
          points += 1
        end
        
-       Global.logger.info "Healing wounds on #{char.name}: docs=#{doctors.join(",")} hospital=#{in_hospital} recovery=#{recovery_roll[:successes]}."
+       Global.logger.info "Healing wounds on #{char.name}: docs=#{doctors.join(",")} recovery=#{recovery_roll[:successes]}."
        
        wounds.each do |d|
          FS3Combat.heal(d, points)
@@ -188,6 +180,20 @@ module AresMUSH
 
        wound.update(healed: true)
      end
+     
+     def self.award_damage_achievement(target, is_mock)
+       return if target.class != Character
+       return if is_mock
+       
+       damage_count = target.damage.count
+       [ 1, 5, 10, 20, 50, 100 ].reverse.each do |count|
+         if (damage_count >= count)
+           Achievements.award_achievement(target, "fs3_wounded", count)
+           break
+         end
+       end  
+     end
+     
   
   end
 end
