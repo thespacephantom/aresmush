@@ -3,12 +3,15 @@ module AresMUSH
     class TinkerCmd
       include CommandHandler
       
+      def check_can_manage
+        return t('dispatcher.not_allowed') if !enactor.has_permission?("tinker")
+        return nil
+      end
+      
       def handle
-    Character.all.each do |c|
-        Demographics.set_group(c, "Rank", "None")
-    end
-    client.emit_success "Done!"
-  end
+        client.emit Character.all.select { |c| c.scenes_participated_in.empty? }.map { |c| "#{c.name}" }
+        client.emit_success "Done!"
+      end
 
     end
   end
