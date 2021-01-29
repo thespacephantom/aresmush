@@ -3,7 +3,7 @@ module AresMUSH
     class SetTerritoryCmd
       include CommandHandler
 
-      attr_accessor :territory_faction
+      attr_accessor :territory
 
       def parse_args
        self.territory = trim_arg(cmd.args)
