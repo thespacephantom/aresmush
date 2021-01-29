@@ -15,10 +15,11 @@ module AresMUSH
       case cmd.root
       when "territory"
         case cmd.switch
+        when nil
+          return TerritoryCmd
         when "set"
           return SetTerritoryCmd
-        end
-      when "hq"
+        when "hq"
           return SetHqCmd
         end
       end
