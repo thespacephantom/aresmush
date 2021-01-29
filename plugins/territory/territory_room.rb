@@ -1,6 +1,6 @@
 module AresMUSH
   class Room
     attribute :territory
-    attribute :is_hq
+    attribute :hq
   end
 end
