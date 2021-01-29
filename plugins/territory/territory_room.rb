@@ -1,5 +1,5 @@
 module AresMUSH
   class Room
-    attribute :territory_faction
+    attribute :territory
   end
 end
