@@ -10,7 +10,7 @@ module AresMUSH
       end
 
       def handle
-        enactor_room.update(territory_faction: self.territory_faction)
+        enactor_room.update(territory: self.territory_faction)
         client.emit_success "Territory for this room set!"
       end
     end
