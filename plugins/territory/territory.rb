@@ -18,7 +18,7 @@ module AresMUSH
         when "set"
           return SetTerritoryCmd
         end
-        when "hq"
+      when "hq"
           return SetHqCmd
         end
       end
