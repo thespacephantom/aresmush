@@ -1,6 +1,6 @@
 module AresMUSH
   module Territory
-    class HqSetCmd
+    class SetHqCmd
       include CommandHandler
 
       #Check that the enactor can set an HQ
