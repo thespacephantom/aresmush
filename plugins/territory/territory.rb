@@ -12,7 +12,14 @@ module AresMUSH
     end
 
     def self.get_cmd_handler(client, cmd, enactor)
-      nil
+      case cmd.root
+      when "territory"
+        case cmd.switch
+        when "set"
+          return SetTerritoryCmd
+        end
+      end
+      return nil
     end
 
     def self.get_event_handler(event_name)
