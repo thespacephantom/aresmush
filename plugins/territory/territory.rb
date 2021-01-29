@@ -20,6 +20,7 @@ module AresMUSH
         end
         when "hq"
           return SetHqCmd
+        end
       end
       return nil
     end
