@@ -13,7 +13,7 @@ module AresMUSH
 
       def handle
         client.emit_ooc t('territory.hq_set')
-        enactor_room.update(hq: enactor.Demographics.get_group)
+        enactor_room.update(hq: enactor.Demographics.get_group(Faction))
       end
     end
   end
