@@ -23,10 +23,7 @@ You can manually update territories. I don't know if I'll implement dynamic terr
 `territory/set <faction>=<room>` - Sets a specific faction to own a specific room. Defaults to the room you're currently in if no faction is specified.
 `territory/HQ` <faction>=<room> - Designates a room as the faction's headquarters. Defaults to the room you're currently in. Not sure what this does yet. Locked to everyone but the faction members maybe. You can change your faction buff/debuff in a HQ.
 
-## HQ
-
-`hq` - Lists all faction headquarters.
-`hq/ability` - Sets faction abilities, can only be used in the HQ by a high ranking faction member I guess.
-`hq/head <character>` - Sets faction head. Leave blank to clear.
-
-ideas: contested territory? percentile territory ownership?
+FaradayToday at 9:56 PM
+I would probably do that with just an attribute named 'faction' on the room.
+Then you could do Room.all.select { |r| r.faction == "Warriors" } to find which rooms are owned by the warrior faction.
+And some_room.update(faction: whatever) to either set or clear the faction.

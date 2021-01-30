@@ -14,6 +14,11 @@ module AresMUSH
           return "You're not allowed to set territories."
       end
 
+      def check_valid_faction
+          return nil if enactor.has_permission?("set_territory")
+          return "Please input a valid faction."
+      end
+
       def handle
         enactor_room.update(territory: self.territory)
         client.emit_success "Territory for this room set!"
