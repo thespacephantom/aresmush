@@ -17,6 +17,8 @@ module AresMUSH
 
       #TODO: Check that this faction doesn't already have an HQ.
       return "No HQ for Neutrals!" if enactor_room.faction == nil
+      return "#{enactor_room.territory} already has an HQ." if !enactor_room.hq ==nil
+
 
       def handle
         client.emit_ooc t('territory.hq_set')
